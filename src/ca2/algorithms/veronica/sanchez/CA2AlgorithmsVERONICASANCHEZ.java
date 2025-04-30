@@ -15,13 +15,147 @@ public class CA2AlgorithmsVERONICASANCHEZ {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
         
        // Enum for menu options
-        enum MenuOption {
+         enum MenuOption {
         SORT, SEARCH, ADD_RECORD, GENERATE_RANDOM, EXIT
     }
-        
+
+    static List<Employee> employeeList = new ArrayList<>();
+    static List<ChiefDepartment> chiefs = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        // Load initial dummy data
+        loadDummyData();
+        // Menu loop
+        do {
+            System.out.println("\n===== Organization Management Menu =====");
+            System.out.println("1. Sort Employees");
+            System.out.println("2. Search Employee");
+            System.out.println("3. Add Employee Record");
+            System.out.println("4. Generate Random Employees");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice (1-5): ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+
+            switch (choice) {
+                case 1:
+                    recursiveSort(employeeList, 0, employeeList.size() - 1);
+                    System.out.println("Sorted Employee Names (First 20):");
+                    for (int i = 0; i < Math.min(20, employeeList.size()); i++) {
+                        System.out.println((i+1) + ". " + employeeList.get(i).getName());
+                    }
+                    break;
+                case 2:
+                    System.out.print("Enter name to search: ");
+                    String nameToSearch = scanner.nextLine();
+                    int index = binarySearch(employeeList, nameToSearch, 0, employeeList.size() - 1);
+                    if (index != -1) {
+                        System.out.println("Found: " + employeeList.get(index));
+                    } else {
+                        System.out.println("Name not found.");
+                    }
+                    break;
+                case 3:
+                    addEmployee(scanner);
+                    break;
+                case 4:
+                    generateRandomEmployees();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice, please try again.");
+                    break;
+            }
+        } while (choice != 5);
+        scanner.close();
     }
-    
+
+    public static void recursiveSort(List<Employee> list, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
+            recursiveSort(list, left, mid);
+            recursiveSort(list, mid + 1, right);
+            merge(list, left, mid, right);
+        }
+    }
+
+    private static void merge(List<Employee> list, int left, int mid, int right) {
+        List<Employee> leftList = new ArrayList<>(list.subList(left, mid + 1));
+        List<Employee> rightList = new ArrayList<>(list.subList(mid + 1, right + 1));
+        int i = 0, j = 0, k = left;
+        while (i < leftList.size() && j < rightList.size()) {
+            if (leftList.get(i).getName().compareToIgnoreCase(rightList.get(j).getName()) <= 0) {
+                list.set(k++, leftList.get(i++));
+            } else {
+                list.set(k++, rightList.get(j++));
+            }
+        }
+        while (i < leftList.size()) list.set(k++, leftList.get(i++));
+        while (j < rightList.size()) list.set(k++, rightList.get(j++));
+    }
+
+    public static int binarySearch(List<Employee> list, String target, int left, int right) {
+        if (left > right) return -1;
+        int mid = (left + right) / 2;
+        String midName = list.get(mid).getName();
+        int cmp = midName.compareToIgnoreCase(target);
+        if (cmp == 0) return mid;
+        if (cmp < 0) return binarySearch(list, target, mid + 1, right);
+        else return binarySearch(list, target, left, mid - 1);
+    }
+
+    public static void addEmployee(Scanner scanner) {
+        System.out.print("Enter name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter start date (YYYY MM DD): ");
+        int year = scanner.nextInt(), month = scanner.nextInt(), day = scanner.nextInt();
+        scanner.nextLine();
+        Calendar startDate = Calendar.getInstance();
+        startDate.set(year, month - 1, day);
+        System.out.print("Enter department: ");
+        String deptInput = scanner.nextLine();
+        Department dept;
+        try {
+            dept = Department.fromString(deptInput);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        Employee emp = new Employee(name, startDate, dept);
+        employeeList.add(emp);
+        System.out.println("Added: " + emp);
+    }
+
+    public static void generateRandomEmployees() {
+        String[] names = {"Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona"};
+        Random rand = new Random();
+        for (int i = 0; i < 5; i++) {
+            String name = names[rand.nextInt(names.length)] + " " + names[rand.nextInt(names.length)];
+            Calendar startDate = Calendar.getInstance();
+            startDate.set(2020 + rand.nextInt(6), rand.nextInt(12), 1 + rand.nextInt(28));
+            Department dept = Department.values()[rand.nextInt(Department.values().length)];
+            Employee emp = new Employee(name, startDate, dept);
+            employeeList.add(emp);
+            System.out.println("Generated: " + emp);
+        }
+    }
+
+    public static void loadDummyData() {
+        Calendar d1 = Calendar.getInstance(); d1.set(2022, 0, 15);
+        Calendar d2 = Calendar.getInstance(); d2.set(2021, 5, 10);
+        Calendar d3 = Calendar.getInstance(); d3.set(2023, 2, 5);
+        employeeList.add(new Employee("Zara Smith", d1, Department.NURSING));
+        employeeList.add(new Employee("Alan Turing", d2, Department.CARDIOLOGY));
+        employeeList.add(new Employee("Marie Curie", d3, Department.RADIOLOGY));
+        // Assign chiefs
+        chiefs.add(new ChiefDepartment(Department.CARDIOLOGY, "Dr. Heart"));
+        chiefs.add(new ChiefDepartment(Department.RADIOLOGY, "Dr. X-Ray"));
+    }
+
 }
