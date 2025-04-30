@@ -10,8 +10,36 @@ import java.util.Calendar;
  */
 public class Employee {
     private String name;
-    private String Department;
+    private Department department;
     private Calendar startDate;
-    private int wage;
+ 
+    
+    public Employee(String name, Calendar startDate, Department department) {
+        this.name = name;
+        this.startDate = startDate;
+        this.department = department;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+    
+     public Calendar getStartDate() {
+        return startDate;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Start Date: " + startDate.get(Calendar.DAY_OF_MONTH) + "/" 
+               + (startDate.get(Calendar.MONTH) + 1) + "/" + startDate.get(Calendar.YEAR) + ", Dept: " 
+               + department + ")";
+    }
+    
+    
+
     
 }
