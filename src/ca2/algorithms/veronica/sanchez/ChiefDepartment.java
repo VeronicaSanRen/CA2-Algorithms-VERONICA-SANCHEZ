@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package ca2.algorithms.veronica.sanchez;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author dell
@@ -13,18 +14,41 @@ public class ChiefDepartment {   // Chief Department class to storage each chief
     //Chief Medical Officer
     //Chief Operating Officer
    
-    private String name;
-    private String department;
-    private Calendar startDate;
-    
-    
-    ChiefDeparmtent (String name, String department, Calendar startDate) {
-            this.name = name;
-            this.department = department;
-            this.startDate = startDate;
+/**
+ * Represents the chief of a department, managing a team of employees.
+ */
+    private Department department;
+    private String chiefName;
+    private List<Employee> team;
+
+    public ChiefDepartment(Department department, String chiefName) {
+        this.department = department;
+        this.chiefName = chiefName;
+        this.team = new ArrayList<>();
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public String getChiefName() {
+        return chiefName;
+    }
+
+    public List<Employee> getTeam() {
+        return team;
+    }
+
+    public void addTeamMember(Employee e) {
+        if (e.getDepartment() == this.department) {
+            team.add(e);
+        } else {
+            throw new IllegalArgumentException("Employee department does not match chief's department.");
         }
-    
-     public String toString() {
-            return name + " " + department + " " + startDate;
-        }
+    }
+
+    @Override
+    public String toString() {
+        return "Chief " + chiefName + " of " + department + " (Team size: " + team.size() + ")";
+    }
 }
