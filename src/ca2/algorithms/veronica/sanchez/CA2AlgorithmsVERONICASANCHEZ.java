@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package ca2.algorithms.veronica.sanchez;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
         
@@ -119,40 +121,66 @@ public class CA2AlgorithmsVERONICASANCHEZ {
         Calendar startDate = Calendar.getInstance();
         startDate.set(year, month - 1, day);
         System.out.print("Enter department: ");
-        String deptInput = scanner.nextLine();
         Department dept;
-        try {
-            dept = Department.fromString(deptInput);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            return;
-        }
-        Employee emp = new Employee(name, startDate, dept);
+        try { dept = Department.fromString(scanner.nextLine()); }
+        catch (IllegalArgumentException e) { System.out.println(e.getMessage()); return; }
+        System.out.print("Enter gender: ");
+        String gender = scanner.nextLine();
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter salary: ");
+        double salary = scanner.nextDouble();
+        scanner.nextLine();
+        Employee emp = new Employee(name, startDate, dept, gender, email, salary);
         employeeList.add(emp);
         System.out.println("Added: " + emp);
     }
 
     public static void generateRandomEmployees() {
         String[] names = {"Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona"};
+        String[] surname = {"Morales", "Sanchez", "Serrano", "Perez", "Garcia", "Lopez"};
+        String[] genders = {"Male", "Female", "Other"};
         Random rand = new Random();
-        for (int i = 0; i < 5; i++) {
-            String name = names[rand.nextInt(names.length)] + " " + names[rand.nextInt(names.length)];
+        for (int i = 0; i < 20; i++) {
+            String name = names[rand.nextInt(names.length)] + " " + surname[rand.nextInt(surname.length)];
             Calendar startDate = Calendar.getInstance();
-            startDate.set(2020 + rand.nextInt(6), rand.nextInt(12), 1 + rand.nextInt(28));
+            startDate.set(2000 + rand.nextInt(24), rand.nextInt(12), 1 + rand.nextInt(28));
             Department dept = Department.values()[rand.nextInt(Department.values().length)];
-            Employee emp = new Employee(name, startDate, dept);
+            String gender = genders[rand.nextInt(genders.length)];
+            String email = name.toLowerCase().replaceAll(" ", ".") + "@gmail.com";
+            double salary = 40000 + rand.nextInt(60000);
+            
+            Employee emp = new Employee(name, startDate, dept, gender, email, salary);
             employeeList.add(emp);
             System.out.println("Generated: " + emp);
         }
     }
+    
+//    public static void writeUsersToCSV(List<Employee> users, String filename) {
+//        try (FileWriter writer = new FileWriter(filename)) {
+//            // Write header
+////            writer.write("ID,First Name,Last Name,Email,Gender\n");
+////            // Write each user's data
+////            for (Employee user : users) {
+////                writer.write(user.name + "," + firstName + "," + lastName + "," + email + "," + gender + "\n");
+////            }
+//            System.out.println("Data successfully written to " + filename);
+//        } catch (IOException e) {
+//            System.out.println("An error occurred while writing to the file.");
+//            e.printStackTrace();
+//        }
+//    }
 
     public static void loadDummyData() {
         Calendar d1 = Calendar.getInstance(); d1.set(2022, 0, 15);
         Calendar d2 = Calendar.getInstance(); d2.set(2021, 5, 10);
         Calendar d3 = Calendar.getInstance(); d3.set(2023, 2, 5);
-        employeeList.add(new Employee("Zara Smith", d1, Department.NURSING));
-        employeeList.add(new Employee("Alan Turing", d2, Department.CARDIOLOGY));
-        employeeList.add(new Employee("Marie Curie", d3, Department.RADIOLOGY));
+        employeeList.add(new Employee("Zara Smith", d1, Department.NURSING, "Female", "zara.smith@gmail.com", 55000));
+        employeeList.add(new Employee("Alan Turing", d2, Department.CARDIOLOGY, "Male", "alan.turing@outlook.com", 75000));
+        employeeList.add(new Employee("Danielle Campbell", d3, Department.RADIOLOGY, "Female", "marie.curie@example.com", 68000));
+        
+        
+        
         // Assign chiefs
         chiefs.add(new ChiefDepartment(Department.CARDIOLOGY, "Dr. Heart"));
         chiefs.add(new ChiefDepartment(Department.RADIOLOGY, "Dr. X-Ray"));
