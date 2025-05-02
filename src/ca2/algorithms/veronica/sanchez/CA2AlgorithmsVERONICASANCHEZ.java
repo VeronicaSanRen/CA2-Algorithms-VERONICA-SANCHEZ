@@ -29,8 +29,7 @@ public class CA2AlgorithmsVERONICASANCHEZ {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int choice;
-        // Load initial dummy data
-        loadDummyData();
+        
         // Menu loop
         do {
             System.out.println("\n===== Organization Management Menu =====");
@@ -154,33 +153,45 @@ public class CA2AlgorithmsVERONICASANCHEZ {
             employeeList.add(emp);
             System.out.println("Generated: " + emp);
         }
+       System.out.println(employeeList.toString());
+       writeUsersToCSV(employeeList,"dummydata");
     }
     
-//    public static void writeUsersToCSV(List<Employee> users, String filename) {
-//        try (FileWriter writer = new FileWriter(filename)) {
-//            // Write header
-////            writer.write("ID,First Name,Last Name,Email,Gender\n");
-////            // Write each user's data
-////            for (Employee user : users) {
-////                writer.write(user.name + "," + firstName + "," + lastName + "," + email + "," + gender + "\n");
-////            }
-//            System.out.println("Data successfully written to " + filename);
-//        } catch (IOException e) {
-//            System.out.println("An error occurred while writing to the file.");
-//            e.printStackTrace();
-//        }
-//    }
+    public static void writeUsersToCSV(List<Employee> users, String filename) {
+        try (FileWriter writer = new FileWriter(filename)) {
+            // Write header
+            writer.write("Name,Start_Date,Department,Gender,Email,Salary\n");
+            // Write each user's data
+            for (Employee user : users) {
+                writer.write(user.getName() + "," + user.getStartDate() + "," + user.getDepartment() + "," + user.getGender() + ","+ user.getEmail() +","+ user.getSalary() + "\n");
+            }
+            System.out.println("Data successfully written to " + filename);
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file.");
+            
+        }
+    }
 
     public static void loadDummyData() {
-        Calendar d1 = Calendar.getInstance(); d1.set(2022, 0, 15);
-        Calendar d2 = Calendar.getInstance(); d2.set(2021, 5, 10);
-        Calendar d3 = Calendar.getInstance(); d3.set(2023, 2, 5);
-        employeeList.add(new Employee("Zara Smith", d1, Department.NURSING, "Female", "zara.smith@gmail.com", 55000));
-        employeeList.add(new Employee("Alan Turing", d2, Department.CARDIOLOGY, "Male", "alan.turing@outlook.com", 75000));
-        employeeList.add(new Employee("Danielle Campbell", d3, Department.RADIOLOGY, "Female", "marie.curie@example.com", 68000));
-        
-        
-        
+//        Calendar d1 = Calendar.getInstance(); d1.set(2022, 0, 15);
+//        Calendar d2 = Calendar.getInstance(); d2.set(2021, 5, 10);
+//        Calendar d3 = Calendar.getInstance(); d3.set(2020, 6, 17);
+//        Calendar d4 = Calendar.getInstance(); d4.set(2024, 12, 2);
+//        Calendar d5 = Calendar.getInstance(); d5.set(2023, 8, 11);
+//        Calendar d6 = Calendar.getInstance(); d6.set(2021, 10, 6);
+//        
+//        
+//        employeeList.add(new Employee("Zara Smith", d1, Department.NURSING, "Female", "zara.smith@gmail.com", 55000));
+//        employeeList.add(new Employee("Alan Turing", d2, Department.CARDIOLOGY, "Male", "alan.turing@outlook.com", 70000));
+//        employeeList.add(new Employee("Danielle Campbell", d3, Department.RADIOLOGY, "Female", "daniellecam@yahoo.com", 68000));
+//        employeeList.add(new Employee("Phoebe Tonkin", d4, Department.INTENSIVE_CARE, "Female", "tonkin@outlook.com", 60000));
+//        employeeList.add(new Employee("Kate Summer", d5, Department.EMERGENCY_DEPARTMENT, "Female", "ksummer@gmail.com", 50000));
+//        employeeList.add(new Employee("James Anderson", d6, Department.ORTHOPAEDICS, "Male", "james_anderson@outlook.com", 48000));
+//        employeeList.add(new Employee("Sarah Johnson", d1, Department.NURSING, "Female", "sarahjohn@gmail.com", 54000));
+//        employeeList.add(new Employee("David Wilson", d2, Department.CARDIOLOGY, "Male", "wilson@outlook.com", 40000));
+//        
+//        
+        System.out.println(employeeList.toString());
         // Assign chiefs
         chiefs.add(new ChiefDepartment(Department.CARDIOLOGY, "Dr. Heart"));
         chiefs.add(new ChiefDepartment(Department.RADIOLOGY, "Dr. X-Ray"));
