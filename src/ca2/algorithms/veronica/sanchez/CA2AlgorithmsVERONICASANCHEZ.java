@@ -6,6 +6,7 @@ package ca2.algorithms.veronica.sanchez;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
         
@@ -64,11 +65,11 @@ public class CA2AlgorithmsVERONICASANCHEZ {
     }
     // ==  Unified entity handler for operations =====
     private static void handleEntity(String operation, Scanner scanner) {
-        System.out.println("Select data type: ");
+        System.out.println("Please select (1-3): ");
         System.out.println("1. Employee");
         System.out.println("2. Chief/Manager");
         System.out.println("3. Department");
-        System.out.print("Enter option (1-3): ");
+      
         int typeChoice = scanner.nextInt();
         scanner.nextLine();               // 
             
@@ -149,7 +150,25 @@ public class CA2AlgorithmsVERONICASANCHEZ {
                     Department dept;
                     try {
                        dept = Department.fromString(scanner.nextLine());
-                       chiefs.add(new ChiefDepartment(dept, name));
+                       
+                       System.out.print("Enter start date (YYYY MM DD): ");
+                       int year = scanner.nextInt(), month = scanner.nextInt(), day = scanner.nextInt();
+                       scanner.nextLine();
+                       Calendar startDate = Calendar.getInstance();
+                       startDate.set(year, month - 1, day);
+
+                       System.out.print("Enter gender: ");
+                       String gender = scanner.nextLine();
+  
+                       System.out.print("Enter email: ");
+                       String email = scanner.nextLine();
+
+                       System.out.print("Enter salary: ");
+                       double salary = scanner.nextDouble();
+                       scanner.nextLine();
+                       
+                       
+                       chiefs.add(new ChiefDepartment(dept, name, startDate, gender, email, salary));
                        System.out.println("Manager added.");
                    } catch (IllegalArgumentException e) {
                        System.out.println(e.getMessage());
@@ -158,8 +177,8 @@ public class CA2AlgorithmsVERONICASANCHEZ {
             }   
                  
                 case "GENERATE_RANDOM": {
-                System.out.println("Manager not implemented.");
-                break;
+                 generateRandomChiefs();
+                 break;
             }
                 default:
                 System.out.println("Invalid operation.");
@@ -281,6 +300,42 @@ public class CA2AlgorithmsVERONICASANCHEZ {
        writeUsersToCSV(employeeList,"dummydata.csv");
     }
     
+    public static void generateRandomChiefs() {
+      String[] names = {"Lisa", "Michael", "Angela", "Robert", "Karen", "Steven", "Nina", "George", "Marissa", "David", "Summer", "Riley", "Alejandro", "Albert", "Rick", "Veronica", "James", "Mark", "Andrea", "Christine"};
+      String[] surnames = {"Smith", "Johnson", "Brown", "Taylor", "Clark", "Walker", "Hall", "Allen", "Young", "King", "Tonkin", "Campbell", "Diaz", "Williams", "Duran", "Rudd", "Jordan", "Harris", "Davis", "Stuart"};
+      String[] genders = {"Male", "Female", "Other"};
+      Department[] departments = Department.values();
+      Random rand = new Random();
+
+      Set<Department> assignedDepartments = new HashSet<>();
+        for (int i = 0; i < 20; i++) {
+        String name = names[rand.nextInt(names.length)] + " " + surnames[rand.nextInt(surnames.length)];
+       
+        Department dept;
+         do {
+            dept = Department.values()[rand.nextInt(Department.values().length)];
+        } while (assignedDepartments.contains(dept));
+         
+        assignedDepartments.add(dept);
+
+        Calendar startDate = Calendar.getInstance();
+        startDate.set(2000 + rand.nextInt(24), rand.nextInt(12), 1 + rand.nextInt(28));
+
+        String gender = genders[rand.nextInt(genders.length)];
+        String email = name.toLowerCase().replaceAll(" ", ".") + "@gmail.com";
+        double salary = 70000 + rand.nextInt(50000);
+        
+        ChiefDepartment chief = new ChiefDepartment(dept, name, startDate, gender, email, salary);
+        chiefs.add(chief);
+        System.out.println("Generated: " + chief);
+    }
+
+      // Write to CSV
+         writeChiefsToCSV(chiefs, "chiefs_dummydata.csv");
+}
+   
+    
+    
     public static void writeUsersToCSV(List<Employee> users, String filename) {
         try (FileWriter writer = new FileWriter(filename)) {
             // Write header
@@ -295,6 +350,26 @@ public class CA2AlgorithmsVERONICASANCHEZ {
             
         }
     }
+    
+    
+    public static void writeChiefsToCSV(List<ChiefDepartment> chiefs, String filename) {
+    try (FileWriter writer = new FileWriter(filename)) {
+        writer.write("Name,Start_Date,Department,Gender,Email,Salary\n");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        for (ChiefDepartment chief : chiefs) {
+            writer.write(chief.getChiefName() + "," +
+                         sdf.format(chief.getStartDate().getTime()) + "," +
+                         chief.getDepartment() + "," +
+                         chief.getGender() + "," +
+                         chief.getEmail() + "," +
+                         chief.getSalary() + "\n");
+        }
+        System.out.println("Chiefs data successfully written to " + filename);
+    } catch (IOException e) {
+        System.out.println("Error writing chiefs to file.");
+    }
+  
+  }
 
 //    public static void loadDummyData(List<Employee> users, String filename) {
 //
