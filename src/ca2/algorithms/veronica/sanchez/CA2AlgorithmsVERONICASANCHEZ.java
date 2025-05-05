@@ -29,53 +29,176 @@ public class CA2AlgorithmsVERONICASANCHEZ {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int choice;
+        MenuOption choice;
         
         // Menu loop
         do {
             System.out.println("\n===== Organization Management Menu =====");
-            System.out.println("1. Sort Employees");
-            System.out.println("2. Search Employee");
-            System.out.println("3. Add Employee Record");
-            System.out.println("4. Generate Random Employees");
+            System.out.println("1. Sort");
+            System.out.println("2. Search");
+            System.out.println("3. Add Record");
+            System.out.println("4. Generate Random");
             System.out.println("5. Exit");
-            System.out.print("Enter choice (1-5): ");
-            choice = scanner.nextInt();
+            System.out.print("Enter option (1-5): ");
+            int option = scanner.nextInt();
             scanner.nextLine(); // consume newline
 
-            switch (choice) {
-                case 1:
+            choice = switch (option) {
+                case 1 -> MenuOption.SORT;
+                case 2 -> MenuOption.SEARCH;
+                case 3 -> MenuOption.ADD_RECORD;
+                case 4 -> MenuOption.GENERATE_RANDOM;
+                case 5 -> MenuOption.EXIT;
+                default -> {
+                    System.out.println("Invalid choice, please try again.");
+                    yield null;
+                }
+            };
+
+            if (choice != null && choice != MenuOption.EXIT) {
+                handleEntity(choice.name(), scanner); 
+            }
+         } while (choice != MenuOption.EXIT);
+        System.out.println("Exit successfully!");
+        scanner.close();
+    }
+    // ==  Unified entity handler for operations =====
+    private static void handleEntity(String operation, Scanner scanner) {
+        System.out.println("Select data type: ");
+        System.out.println("1. Employee");
+        System.out.println("2. Chief/Manager");
+        System.out.println("3. Department");
+        System.out.print("Enter option (1-3): ");
+        int typeChoice = scanner.nextInt();
+        scanner.nextLine();               // 
+            
+        
+         switch (typeChoice) {
+            case 1 -> handleEmployeeOperation(operation, scanner); // 
+            case 2 -> handleChiefOperation(operation, scanner);    // 
+            case 3 -> handleDepartmentOperation(operation, scanner); // 
+            default -> System.out.println("Invalid type selected.");
+        }
+    }
+        
+        
+            // Employee
+            private static void handleEmployeeOperation(String operation, Scanner scanner) {
+                 switch (operation) {
+                    case "SORT": {
                     recursiveSort(employeeList, 0, employeeList.size() - 1);
-                    System.out.println("Sorted Employee Names (First 20):");
+                    System.out.println("Sorted Employees (First 20):");
                     for (int i = 0; i < Math.min(20, employeeList.size()); i++) {
                         System.out.println((i+1) + ". " + employeeList.get(i).getName());
                     }
                     break;
-                case 2:
-                    System.out.print("Enter name to search: ");
-                    String nameToSearch = scanner.nextLine();
-                    int index = binarySearch(employeeList, nameToSearch, 0, employeeList.size() - 1);
-                    if (index != -1) {
-                        System.out.println("Found: " + employeeList.get(index));
-                    } else {
-                        System.out.println("Name not found.");
-                    }
-                    break;
-                case 3:
-                    addEmployee(scanner);
-                    break;
-                case 4:
-                    generateRandomEmployees();
-                    break;
-                case 5:
-                    System.out.println("Exiting...");
-                    break;
-                default:
-                    System.out.println("Invalid choice, please try again.");
+                 }
+                
+                case "SEARCH": {
+                    System.out.print("Enter employee name to search: ");
+                    String name = scanner.nextLine();
+                    int index = binarySearch(employeeList, name, 0, employeeList.size() - 1);
+                    System.out.println(index != -1 ? "Found: " + employeeList.get(index) : "Not found.");
                     break;
             }
-        } while (choice != 5);
-        scanner.close();
+                case "ADD_RECORD": {
+                    addEmployee(scanner);
+                    break;
+                }
+                case "GENERATE_RANDOM": {
+                    generateRandomEmployees();
+                    break;
+                }
+                default:  
+                    System.out.println("Invalid operation.");
+                    break;
+        }
+    }
+                    
+              // Chief/Manager          
+          
+        private static void handleChiefOperation(String operation, Scanner scanner) {
+        switch (operation) {
+                case "SORT": {
+                    chiefs.sort(Comparator.comparing(ChiefDepartment::getChiefName));
+                    System.out.println("Sorted Managers (Chiefs): ");
+                    chiefs.forEach(System.out::println);
+                    break;
+                    }
+                   
+                case "SEARCH": {
+                    System.out.print("Enter manager name to search: ");
+                    String name = scanner.nextLine();
+                    boolean found = false;
+                    for (ChiefDepartment chief : chiefs) {
+                        if (chief.getChiefName().equalsIgnoreCase(name)) {
+                            System.out.println("Found: " + chief);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        System.out.println("Manager not found.");
+                    }
+                    break;
+                }  
+                case "ADD_RECORD": {
+                    System.out.print("Enter manager name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter department: ");
+                    Department dept;
+                    try {
+                       dept = Department.fromString(scanner.nextLine());
+                       chiefs.add(new ChiefDepartment(dept, name));
+                       System.out.println("Manager added.");
+                   } catch (IllegalArgumentException e) {
+                       System.out.println(e.getMessage());
+                }
+                break;
+            }   
+                 
+                case "GENERATE_RANDOM": {
+                System.out.println("Manager not implemented.");
+                break;
+            }
+                default:
+                System.out.println("Invalid operation.");
+                break;
+        }
+    }
+            
+        
+         // Department
+        private static void handleDepartmentOperation(String operation, Scanner scanner) {
+            switch (operation) {
+                case "SORT": {
+                   Department[] departments = Department.values();
+                   Arrays.sort(departments, Comparator.comparing(Enum::name));
+                   for (Department d : departments) {
+                    System.out.println("- " + d);
+                }
+                    break;
+            }
+                case "SEARCH": {
+                    System.out.print("Enter department name: ");
+                    String deptName = scanner.nextLine();
+                    try {
+                        Department department = Department.fromString(deptName);
+                        System.out.println("Department exists: " + department);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Department not found.");
+                   }
+                    break;
+                }
+                  
+                case "ADD_RECORD", "GENERATE_RANDOM": {
+                    System.out.println("Departments are predefined.");
+                    break;
+            }
+               default: 
+                    System.out.println("Unsupported operation.");
+                    break;
+        }
     }
 
     public static void recursiveSort(List<Employee> list, int left, int right) {
@@ -155,7 +278,7 @@ public class CA2AlgorithmsVERONICASANCHEZ {
             System.out.println("Generated: " + emp);
         }
        System.out.println(employeeList.toString());
-       writeUsersToCSV(employeeList,"dummydata");
+       writeUsersToCSV(employeeList,"dummydata.csv");
     }
     
     public static void writeUsersToCSV(List<Employee> users, String filename) {
