@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package ca2.algorithms.veronica.sanchez;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -136,8 +137,8 @@ public class CA2AlgorithmsVERONICASANCHEZ {
     }
 
     public static void generateRandomEmployees() {
-        String[] names = {"Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona"};
-        String[] surname = {"Morales", "Sanchez", "Serrano", "Perez", "Garcia", "Lopez"};
+        String[] names = {"Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona", "Danielle", "Phoebe", "Veronica", "Stephan", "Josh", "Mark", "Sophia", "Cameron", "Olivia", "Alice", "Tom", "David", "Mila", "Jessica"};
+        String[] surname = {"Morales", "Sanchez", "Serrano", "Perez", "Garcia", "Lopez", "Campbell", "Tonkin", "Evans", "Johnson", "McQueen", "Pattinson", "Diaz", "Williams", "Jonas", "Stuart", "Morgan", "Russell", "Harris", "Davis"};
         String[] genders = {"Male", "Female", "Other"};
         Random rand = new Random();
         for (int i = 0; i < 20; i++) {
@@ -172,29 +173,27 @@ public class CA2AlgorithmsVERONICASANCHEZ {
         }
     }
 
-    public static void loadDummyData() {
-//        Calendar d1 = Calendar.getInstance(); d1.set(2022, 0, 15);
-//        Calendar d2 = Calendar.getInstance(); d2.set(2021, 5, 10);
-//        Calendar d3 = Calendar.getInstance(); d3.set(2020, 6, 17);
-//        Calendar d4 = Calendar.getInstance(); d4.set(2024, 12, 2);
-//        Calendar d5 = Calendar.getInstance(); d5.set(2023, 8, 11);
-//        Calendar d6 = Calendar.getInstance(); d6.set(2021, 10, 6);
+//    public static void loadDummyData(List<Employee> users, String filename) {
+//
 //        
-//        
-//        employeeList.add(new Employee("Zara Smith", d1, Department.NURSING, "Female", "zara.smith@gmail.com", 55000));
-//        employeeList.add(new Employee("Alan Turing", d2, Department.CARDIOLOGY, "Male", "alan.turing@outlook.com", 70000));
-//        employeeList.add(new Employee("Danielle Campbell", d3, Department.RADIOLOGY, "Female", "daniellecam@yahoo.com", 68000));
-//        employeeList.add(new Employee("Phoebe Tonkin", d4, Department.INTENSIVE_CARE, "Female", "tonkin@outlook.com", 60000));
-//        employeeList.add(new Employee("Kate Summer", d5, Department.EMERGENCY_DEPARTMENT, "Female", "ksummer@gmail.com", 50000));
-//        employeeList.add(new Employee("James Anderson", d6, Department.ORTHOPAEDICS, "Male", "james_anderson@outlook.com", 48000));
-//        employeeList.add(new Employee("Sarah Johnson", d1, Department.NURSING, "Female", "sarahjohn@gmail.com", 54000));
-//        employeeList.add(new Employee("David Wilson", d2, Department.CARDIOLOGY, "Male", "wilson@outlook.com", 40000));
-//        
-//        
-        System.out.println(employeeList.toString());
-        // Assign chiefs
-        chiefs.add(new ChiefDepartment(Department.CARDIOLOGY, "Dr. Heart"));
-        chiefs.add(new ChiefDepartment(Department.RADIOLOGY, "Dr. X-Ray"));
-    }
+//        try (Scanner scanner = new Scanner(new File(filename))) {
+//    while (scanner.hasNextLine()) {
+//        users.add(getRecordFromLine(scanner.nextLine()));
+//    }
+//}
+//        // Assign chiefs
+////        chiefs.add(new ChiefDepartment(Department.CARDIOLOGY, "Dr. Heart"));
+////        chiefs.add(new ChiefDepartment(Department.RADIOLOGY, "Dr. X-Ray"));
+//    }
 
+//    private List<Employee> getRecordFromLine(String line) {
+//    List<Employee> values = new ArrayList<Employee>();
+//    try (Scanner rowScanner = new Scanner(line)) {
+//        rowScanner.useDelimiter(",");
+//        while (rowScanner.hasNext()) {
+//            values.add(rowScanner.next());
+//        }
+//    }
+//    return values;
+//}
 }
