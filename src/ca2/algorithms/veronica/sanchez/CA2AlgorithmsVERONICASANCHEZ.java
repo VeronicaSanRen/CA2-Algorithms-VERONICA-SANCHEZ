@@ -3,9 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package ca2.algorithms.veronica.sanchez;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -28,10 +32,17 @@ public class CA2AlgorithmsVERONICASANCHEZ {
     static List<Employee> employeeList = new ArrayList<>();
     static List<ChiefDepartment> chiefs = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, FileNotFoundException, ParseException {
         Scanner scanner = new Scanner(System.in);
         MenuOption choice;
-        
+        System.out.println("Would yo like to read a document : yes/no\n");
+        String input =scanner.nextLine();
+        if (input.equalsIgnoreCase("yes")){
+            
+            loadDummyData("dummydata.csv");
+            System.out.println("Document read successfully! ");
+         
+        }
         // Menu loop
         do {
             System.out.println("\n===== Organization Management Menu =====");
@@ -245,6 +256,7 @@ public class CA2AlgorithmsVERONICASANCHEZ {
     }
 
     public static int binarySearch(List<Employee> list, String target, int left, int right) {
+        
         if (left > right) return -1;
         int mid = (left + right) / 2;
         String midName = list.get(mid).getName();
@@ -296,7 +308,7 @@ public class CA2AlgorithmsVERONICASANCHEZ {
             employeeList.add(emp);
             System.out.println("Generated: " + emp);
         }
-       System.out.println(employeeList.toString());
+      
        writeUsersToCSV(employeeList,"dummydata.csv");
     }
     
@@ -304,27 +316,20 @@ public class CA2AlgorithmsVERONICASANCHEZ {
       String[] names = {"Lisa", "Michael", "Angela", "Robert", "Karen", "Steven", "Nina", "George", "Marissa", "David", "Summer", "Riley", "Alejandro", "Albert", "Rick", "Veronica", "James", "Mark", "Andrea", "Christine"};
       String[] surnames = {"Smith", "Johnson", "Brown", "Taylor", "Clark", "Walker", "Hall", "Allen", "Young", "King", "Tonkin", "Campbell", "Diaz", "Williams", "Duran", "Rudd", "Jordan", "Harris", "Davis", "Stuart"};
       String[] genders = {"Male", "Female", "Other"};
-      Department[] departments = Department.values();
+      
       Random rand = new Random();
 
-      Set<Department> assignedDepartments = new HashSet<>();
+      
         for (int i = 0; i < 20; i++) {
-        String name = names[rand.nextInt(names.length)] + " " + surnames[rand.nextInt(surnames.length)];
-       
-        Department dept;
-         do {
-            dept = Department.values()[rand.nextInt(Department.values().length)];
-        } while (assignedDepartments.contains(dept));
-         
-        assignedDepartments.add(dept);
-
-        Calendar startDate = Calendar.getInstance();
-        startDate.set(2000 + rand.nextInt(24), rand.nextInt(12), 1 + rand.nextInt(28));
-
-        String gender = genders[rand.nextInt(genders.length)];
-        String email = name.toLowerCase().replaceAll(" ", ".") + "@gmail.com";
-        double salary = 70000 + rand.nextInt(50000);
         
+       
+            String name = names[rand.nextInt(names.length)] + " " + surnames[rand.nextInt(surnames.length)];
+            Calendar startDate = Calendar.getInstance();
+            startDate.set(2000 + rand.nextInt(24), rand.nextInt(12), 1 + rand.nextInt(28));
+            Department dept = Department.values()[rand.nextInt(Department.values().length)];
+            String gender = genders[rand.nextInt(genders.length)];
+            String email = name.toLowerCase().replaceAll(" ", ".") + "@gmail.com";
+            double salary = 40000 + rand.nextInt(60000);
         ChiefDepartment chief = new ChiefDepartment(dept, name, startDate, gender, email, salary);
         chiefs.add(chief);
         System.out.println("Generated: " + chief);
@@ -370,6 +375,46 @@ public class CA2AlgorithmsVERONICASANCHEZ {
     }
   
   }
+    
+    public static void loadDummyData(String filename) throws FileNotFoundException, IOException, ParseException {
+
+    BufferedReader br = new BufferedReader(new FileReader(filename));
+    String line;
+    int flag=0;
+    while ((line = br.readLine()) != null) {
+        String[] values = line.split(",");
+        flag=flag+1;
+        if (flag>1)  { 
+            String name = values[0];
+            Calendar startDate = Calendar.getInstance();
+            String dateString = values[1].trim();
+
+        // Define the date format
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+
+
+        Date date = sdf.parse(dateString);
+        startDate.setTime(date);
+
+            String input = values[2];
+            Department department = Department.fromString(input);
+            
+            String gender = values[3];
+            String email = values[4];
+            
+
+        double salary = Double.parseDouble(values[5]);
+        Employee emp = new Employee(name, startDate, department, gender, email, salary);
+        employeeList.add(emp);
+         }
+    }
+    for(int j=0; j<employeeList.size();j++){
+    
+        System.out.println(employeeList.get(j).toString());
+    }
+    
+     
+}
 
 //    public static void loadDummyData(List<Employee> users, String filename) {
 //
